@@ -6,9 +6,13 @@ const nostrloaded = "nostrloaded";
 const beforenostrupdate = "beforenostrupdate";
 const nostrupdated = "nostrupdated";
 
-let resolveNostr: (nostr: Nip07.Nostr) => void = () => {};
+let resolveNostr: (nostr: Nip07.Nostr) => void | undefined;
 export const readyNostr = new Promise<Nip07.Nostr>((resolve) => {
-  resolveNostr = resolve;
+  if ("nostr" in window) {
+    resolve(window.nostr as Nip07.Nostr);
+  } else {
+    resolveNostr = resolve;
+  }
 });
 
 Object.defineProperty(window, "nostr", {
@@ -36,7 +40,7 @@ Object.defineProperty(window, "nostr", {
         })
       );
       if (afterEvent === nostrloaded) {
-        resolveNostr(nostr);
+        resolveNostr?.(nostr);
       }
     }
   },
