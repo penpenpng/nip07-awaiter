@@ -25,8 +25,6 @@ Four custom events are available on `window` object:
 - `beforenostrupdate`: Fire before `window.nostr` is updated for the second or subsequent. Cancellable.
 - `nostrupdated`: Fire after `window.nostr` is updated for the second or subsequent.
 
-Example:
-
 ```js
 window.addEventListener("beforenostrload", (ev) => {
   console.log(ev.detail.nostr /* NIP-07 interface to be installed */);
@@ -50,4 +48,12 @@ window.addEventListener("nostrloaded", (ev) => {
 import { readyNostr } from "nip07-awaiter";
 
 const nostr = await readyNostr;
+```
+
+If you want to set a timeout, you can use `waitNostr` instead.
+
+```js
+import { waitNostr } from "nip07-awaiter";
+
+const nostrOrUndefined = await waitNostr(1000);
 ```

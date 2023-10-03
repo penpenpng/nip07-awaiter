@@ -15,6 +15,18 @@ export const readyNostr = new Promise<Nip07.Nostr>((resolve) => {
   }
 });
 
+export const waitNostr = (
+  timeoutMs: number
+): Promise<Nip07.Nostr | undefined> =>
+  Promise.race([
+    new Promise<undefined>((resolve) => {
+      setTimeout(() => {
+        resolve(undefined);
+      }, timeoutMs);
+    }),
+    readyNostr,
+  ]);
+
 Object.defineProperty(window, "nostr", {
   configurable: false,
   get: () => current,
