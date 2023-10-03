@@ -1,6 +1,6 @@
 import type { Nip07 } from "nostr-typedef";
 
-let current: unknown = undefined;
+let current: Nip07.Nostr | undefined = undefined;
 const beforenostrload = "beforenostrload";
 const nostrloaded = "nostrloaded";
 const beforenostrupdate = "beforenostrupdate";
@@ -9,7 +9,8 @@ const nostrupdated = "nostrupdated";
 let resolveNostr: (nostr: Nip07.Nostr) => void | undefined;
 export const readyNostr = new Promise<Nip07.Nostr>((resolve) => {
   if ("nostr" in window) {
-    resolve(window.nostr as Nip07.Nostr);
+    current = window.nostr as Nip07.Nostr;
+    resolve(current);
   } else {
     resolveNostr = resolve;
   }
