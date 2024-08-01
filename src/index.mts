@@ -28,6 +28,8 @@ export const waitNostr = (
     readyNostr,
   ]);
 
+export const getNostr = () => window.nostr;
+
 Object.defineProperty(window, "nostr", {
   configurable: false,
   get: () => current,
@@ -66,4 +68,7 @@ declare global {
     [beforenostrupdate]: CustomEvent<{ nostr: Nip07.Nostr }>;
     [nostrupdated]: CustomEvent<{ nostr: Nip07.Nostr }>;
   }
+
+  // eslint-disable-next-line no-var
+  var nostr: Nip07.Nostr | undefined;
 }
