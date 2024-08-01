@@ -57,3 +57,7 @@ import { waitNostr } from "nip07-awaiter";
 
 const nostrOrUndefined = await waitNostr(1000);
 ```
+
+### Synchronous interface
+
+`getNostr` return synchronously NIP-07 interface if exists.
