@@ -16,48 +16,45 @@ or
 
 ## Usage
 
-### Events
+### `waitNostr()`
 
-Four custom events are available on `window` object:
-
-- `beforenostrload`: Fire before `window.nostr` is initialized. Cancellable.
-- `nostrloaded`: Fire after `window.nostr` is initialized.
-- `beforenostrupdate`: Fire before `window.nostr` is updated for the second or subsequent. Cancellable.
-- `nostrupdated`: Fire after `window.nostr` is updated for the second or subsequent.
-
-```js
-window.addEventListener("beforenostrload", (ev) => {
-  console.log(ev.detail.nostr /* NIP-07 interface to be installed */);
-  console.log(window.nostr === undefined /* => true */);
-
-  // You can cancel the installation.
-  ev.preventDefault();
-});
-
-window.addEventListener("nostrloaded", (ev) => {
-  console.log(ev.detail.nostr /* NIP-07 interface installed */);
-  console.log(ev.detail.nostr === window.nostr /* => true */);
-});
-```
-
-### Promise
-
-`readyNostr` is a promise that resolves to NIP-07 interface.
-
-```js
-import { readyNostr } from "nip07-awaiter";
-
-const nostr = await readyNostr;
-```
-
-If you want to set a timeout, you can use `waitNostr` instead.
+Return a promise. It is to be resolved as `window.nostr` when it is installed or as soon as possible thereafter.
+If `window.nostr` is not installed after waiting the given time, it is to be resolved as `undefined`.
 
 ```js
 import { waitNostr } from "nip07-awaiter";
 
+// It will be resolved as `window.nostr` or `undefined` within 1 sec.
 const nostrOrUndefined = await waitNostr(1000);
 ```
 
-### Synchronous interface
+If needed, you can pass a [AbortSignal](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal). When aborted `waitNostr()` rejects and return the reason.
 
-`getNostr` return synchronously NIP-07 interface if exists.
+```js
+const controller = new AbortController();
+const { signal } = controller;
+
+waitNostr(10 * 1000, { signal });
+```
+
+### `getNostr()`
+
+`getNostr()` return synchronously NIP-07 interface if exists.
+
+```js
+import { getNostr } from "nip07-awaiter";
+
+const pubkey = await getNostr()?.getPublicKey();
+```
+
+### `isNostr()`
+
+`isNostr()` is a type gurad function. Return true if the given value is a NIP-07 extension.
+
+```js
+import { isNostr } from "nip07-awaiter";
+
+if (isNostr(window.nostr)) {
+  console.log(await window.nostr.getPublicKey());
+}
+```
